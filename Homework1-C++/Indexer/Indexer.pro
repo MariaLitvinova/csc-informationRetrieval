@@ -18,9 +18,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
 	stemmer.cpp \
 	utils.cpp \
-    indexer.cpp
+	indexer.cpp \
+	coordinateIndexer.cpp
 
 HEADERS += \
 	stemmer.h \
 	utils.h \
-    indexer.h
+	indexer.h \
+	coordinateIndexer.h

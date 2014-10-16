@@ -3,6 +3,7 @@
 
 #include "stemmer.h"
 #include "indexer.h"
+#include "coordinateIndexer.h"
 
 using namespace indexer;
 
@@ -10,7 +11,7 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication a(argc, argv);
 
-	if (argc != 3) {
+	if ((argc != 3) && (argc != 4)) {
 		qDebug() << "Invalid arguments";
 		return 1;
 	}
@@ -24,6 +25,11 @@ int main(int argc, char *argv[])
 
 	Indexer indexer(applicationPath);
 	indexer.buildIndex();
+
+	if (argc == 4) {
+		CoordinateIndexer coordIndexer(applicationPath);
+		coordIndexer.buildCoordinateIndex();
+	}
 
 	return a.exec();
 }

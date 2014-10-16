@@ -45,7 +45,7 @@ void Stemmer::stemOneFile(QFileInfo fileInfo)
 	QString const secondArgument = mPathToStemmedDocuments + "/" + fileName;
 
 	QStringList arguments;
-	arguments << firstArgument << secondArgument;
+	arguments << "-l" << firstArgument << secondArgument;
 
 	QProcess stemmer;
 	stemmer.start(mPathToMyStem, arguments);
