@@ -12,7 +12,7 @@ namespace searcher {
 class IndexLoader
 {
 public:
-	IndexLoader(QString const &pathToIndex);
+	explicit IndexLoader(QString const &pathToIndex);
 	QMultiHash<QString, QString> loadedIndex();
 
 private:

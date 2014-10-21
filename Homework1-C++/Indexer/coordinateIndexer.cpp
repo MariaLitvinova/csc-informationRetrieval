@@ -65,7 +65,9 @@ void CoordinateIndexer::buildIndexForOneFile(QFileInfo fileInfo)
 
 void CoordinateIndexer::addOneWordToIndex(QString const &word, const int number)
 {
-	mWordAndNumber.insert(word, number);
+	if (!word.isEmpty()) {
+		mWordAndNumber.insert(word, number);
+	}
 }
 
 void CoordinateIndexer::createDirectoryForCoordinateIndex()

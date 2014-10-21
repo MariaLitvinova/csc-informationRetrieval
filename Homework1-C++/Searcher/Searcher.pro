@@ -17,8 +17,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
 	indexLoader.cpp \
-	searcher.cpp
+	searcher.cpp \
+	coordinateIndexLoader.cpp \
+	coordinateIndexSearcher.cpp
 
 HEADERS += \
 	indexLoader.h \
-	searcher.h
+	searcher.h \
+	coordinateIndexLoader.h \
+	coordinateIndexSearcher.h

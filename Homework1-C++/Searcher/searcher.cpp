@@ -7,22 +7,24 @@ Searcher::Searcher(QMultiHash<QString, QString> hashTable)
 {
 }
 
-void Searcher::processRequest(QString const &request)
+QStringList Searcher::processRequest(QString const &request)
 {
-	QString const normalizedRequest = request.toLower();
+	QString const loweredRequest = request.toLower();
 
-	if (incorrectRequest(normalizedRequest)) {
+	if (incorrectRequest(loweredRequest) && (!loweredRequest.contains("/"))) {
 		qDebug() << "Incorrect request";
-		return;
+		return {};
 	}
 
+	QString const normalizedRequest = requestWithoutCoordinateParts(loweredRequest);
+
 	if (normalizedRequest.contains("or")) {
-		processOrRequest(normalizedRequest);
+		return processOrRequest(normalizedRequest);
 	} else {
 		if (normalizedRequest.contains("and")) {
-			processAndRequest(normalizedRequest);
+			return processAndRequest(normalizedRequest);
 		} else {
-			processSimpleRequest(normalizedRequest);
+			return processSimpleRequest(normalizedRequest);
 		}
 	}
 }
@@ -37,13 +39,28 @@ bool Searcher::incorrectRequest(QString const &request)
 	return containsTwoTypesOfOperators || containsTooManyWords;
 }
 
-void Searcher::processSimpleRequest(QString const &request)
+QString Searcher::requestWithoutCoordinateParts(QString const &request)
+{
+	QStringList splittedList = request.split(" ");
+	QString resultRequest = "";
+
+	for (QString const &part : splittedList) {
+		if (part.at(0) != '/') {
+			resultRequest += part + " and ";
+		}
+	}
+
+	return resultRequest;
+}
+
+QStringList Searcher::processSimpleRequest(QString const &request)
 {
 	QStringList foundFiles = mHashTable.values(request);
 	output(foundFiles);
+	return foundFiles;
 }
 
-void Searcher::processOrRequest(QString const &request)
+QStringList Searcher::processOrRequest(QString const &request)
 {
 	QString copy = request;
 	QString requestWithoutSpaces = copy.replace(" ", "");
@@ -62,9 +79,10 @@ void Searcher::processOrRequest(QString const &request)
 	}
 
 	output(result);
+	return result;
 }
 
-void Searcher::processAndRequest(QString const &request)
+QStringList Searcher::processAndRequest(QString const &request)
 {
 	QString copy = request;
 	QString requestWithoutSpaces = copy.replace(" ", "");
@@ -78,6 +96,7 @@ void Searcher::processAndRequest(QString const &request)
 	}
 
 	output(result.toList());
+	return result.toList();
 }
 
 void Searcher::output(QStringList list)

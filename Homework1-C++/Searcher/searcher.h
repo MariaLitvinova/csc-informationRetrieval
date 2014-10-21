@@ -11,15 +11,16 @@ class Searcher
 {
 public:
 	explicit Searcher(QMultiHash<QString, QString> hashTable);
-	void processRequest(QString const &request);
+	QStringList processRequest(QString const &request);
 
 private:
 	bool incorrectRequest(QString const &request);
+	QString requestWithoutCoordinateParts(QString const &request);
 
-	void processSimpleRequest(QString const &request);
+	QStringList processSimpleRequest(QString const &request);
 
-	void processOrRequest(QString const &request);
-	void processAndRequest(QString const &request);
+	QStringList processOrRequest(QString const &request);
+	QStringList processAndRequest(QString const &request);
 
 	void output(QStringList list);
 
