@@ -13,7 +13,7 @@ IndexLoader::IndexLoader(QString const &pathToIndex)
 
 	qDebug() << "Starting loading index";
 	QTextStream in(&file);
-	in.setCodec(QTextCodec::codecForName("IBM 866"));
+	in.setCodec(QTextCodec::codecForName("UTF-8"));
 
 	while (!in.atEnd()) {
 		QString const line = in.readLine();

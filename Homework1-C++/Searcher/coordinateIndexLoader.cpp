@@ -28,7 +28,7 @@ QHash<QString, QMultiHash<QString, QString> > CoordinateIndexLoader::loadedIndex
 void CoordinateIndexLoader::loadOneFileIndex(QFileInfo fileInfo)
 {
 	QString const absoluteFilePath = fileInfo.absoluteFilePath();
-	QString const fileName = fileInfo.fileName();
+	QString const fileName = fileInfo.fileName().remove(".txt_index");
 
 	QFile file(absoluteFilePath);
 	if (!file.open(QIODevice::ReadOnly)) {
@@ -37,7 +37,7 @@ void CoordinateIndexLoader::loadOneFileIndex(QFileInfo fileInfo)
 	}
 
 	QTextStream in(&file);
-	in.setCodec(QTextCodec::codecForName("IBM 866"));
+	in.setCodec(QTextCodec::codecForName("UTF-8"));
 
 	QMultiHash<QString, QString> newInsertion;
 

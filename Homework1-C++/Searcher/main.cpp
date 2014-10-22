@@ -17,6 +17,17 @@ bool isCoordinateRequest(QString const &request)
 	return request.contains("/");
 }
 
+void output(QStringList list)
+{
+	if (list.isEmpty()) {
+		qDebug() << "Nothing found";
+	} else {
+		for (QString const &word : list) {
+			qDebug() << word << " ";
+		}
+	}
+}
+
 void searchInSimpleIndex(QString const &pathToIndex)
 {
 	IndexLoader loader(pathToIndex);
@@ -37,7 +48,8 @@ void searchInSimpleIndex(QString const &pathToIndex)
 	do {
 		line = in.readLine();
 		if (line != ":q") {
-			search.processRequest(line);
+			QStringList result = search.processRequest(line);
+			output(result);
 		}
 	} while (line != ":q");
 }

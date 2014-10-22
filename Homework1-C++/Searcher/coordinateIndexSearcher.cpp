@@ -11,6 +11,7 @@ void CoordinateIndexSearcher::processRequest(QStringList foundFiles, QString con
 {
 	QStringList parsedList = fullRequest.split(" ");
 
+	bool somethingFound = false;
 	for (QString const &file : foundFiles) {
 		bool result = true;
 		int counterInList = 0;
@@ -27,7 +28,12 @@ void CoordinateIndexSearcher::processRequest(QStringList foundFiles, QString con
 		}
 		if (result) {
 			qDebug() << file;
+			somethingFound = true;
 		}
+	}
+
+	if (!somethingFound) {
+		qDebug() << "Nothing found!";
 	}
 }
 
@@ -38,6 +44,7 @@ bool CoordinateIndexSearcher::okayForRequest(
 		, int const number
 		, char compareOperator)
 {
+	qDebug() << "request: " << fileName << " " << firstWord << " " << secondWord << " " << number << " " << compareOperator;
 	if (compareOperator == '\0') {
 		return (wordNumber(fileName, firstWord) == wordNumber(fileName, secondWord) - number)
 				||
@@ -46,6 +53,7 @@ bool CoordinateIndexSearcher::okayForRequest(
 		if (compareOperator == '-') {
 			return (wordNumber(fileName, firstWord) - wordNumber(fileName, secondWord) <= number);
 		} else {
+			qDebug() << "ololo" << wordNumber(fileName, firstWord) - wordNumber(fileName, secondWord);
 			return (wordNumber(fileName, firstWord) - wordNumber(fileName, secondWord) >= number);
 		}
 	}
@@ -71,5 +79,6 @@ int CoordinateIndexSearcher::distanceBetweenWords(QString request) const
 
 int CoordinateIndexSearcher::wordNumber(QString const &fileName, QString const &word)
 {
+	qDebug() << mHashTable.value(fileName).value(word).toInt();
 	return mHashTable.value(fileName).value(word).toInt();
 }

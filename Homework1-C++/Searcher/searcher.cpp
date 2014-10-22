@@ -41,22 +41,25 @@ bool Searcher::incorrectRequest(QString const &request)
 
 QString Searcher::requestWithoutCoordinateParts(QString const &request)
 {
-	QStringList splittedList = request.split(" ");
-	QString resultRequest = "";
+	if (request.contains("/")) {
+		QStringList splittedList = request.split(" ");
+		QString resultRequest = "";
 
-	for (QString const &part : splittedList) {
-		if (part.at(0) != '/') {
-			resultRequest += part + " and ";
+		for (QString const &part : splittedList) {
+			if (part.at(0) != '/') {
+				resultRequest += part + " and ";
+			}
 		}
-	}
 
-	return resultRequest;
+		return resultRequest;
+	} else {
+		return request;
+	}
 }
 
 QStringList Searcher::processSimpleRequest(QString const &request)
 {
 	QStringList foundFiles = mHashTable.values(request);
-	output(foundFiles);
 	return foundFiles;
 }
 
@@ -78,36 +81,25 @@ QStringList Searcher::processOrRequest(QString const &request)
 		}
 	}
 
-	output(result);
 	return result;
 }
 
 QStringList Searcher::processAndRequest(QString const &request)
 {
 	QString copy = request;
-	QString requestWithoutSpaces = copy.replace(" ", "");
+	QString requestWithoutSpaces = copy.remove(" ");
 	QStringList parts = requestWithoutSpaces.split("and");
 
 	QSet<QString> result = mHashTable.values().toSet();
 
 	for (QString const part : parts) {
-		QStringList foundFiles = mHashTable.values(part);
-		result = setAndList(result, foundFiles);
-	}
-
-	output(result.toList());
-	return result.toList();
-}
-
-void Searcher::output(QStringList list)
-{
-	if (list.isEmpty()) {
-		qDebug() << "Nothing found";
-	} else {
-		for (QString const &word : list) {
-			qDebug() << word << " ";
+		if (!part.isEmpty()) {
+			QStringList foundFiles = mHashTable.values(part);
+			result = setAndList(result, foundFiles);
 		}
 	}
+
+	return result.toList();
 }
 
 QSet<QString> Searcher::setAndList(QSet<QString> startSet, QStringList list)

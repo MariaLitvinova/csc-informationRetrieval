@@ -22,8 +22,6 @@ private:
 	QStringList processOrRequest(QString const &request);
 	QStringList processAndRequest(QString const &request);
 
-	void output(QStringList list);
-
 	QSet<QString> setAndList(QSet<QString> startSet, QStringList list);
 
 	QMultiHash<QString, QString> mHashTable;
