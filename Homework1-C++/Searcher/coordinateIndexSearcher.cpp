@@ -89,7 +89,6 @@ bool CoordinateIndexSearcher::anyFound(QList<int> firstWordIndexes, QList<int> s
 
 	for (int const firstWordIndex : firstWordIndexes) {
 		for (int const secondWordIndex : secondWordIndexes) {
-			qDebug() << firstWordIndex << " " << secondWordIndex << comparingOperator;
 			bool currentWordsFound = false;
 			if (comparingOperator == '+') {
 				currentWordsFound = furtherFound(firstWordIndex, secondWordIndex, number);
