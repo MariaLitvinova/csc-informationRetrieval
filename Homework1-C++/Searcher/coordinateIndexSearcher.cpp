@@ -44,19 +44,10 @@ bool CoordinateIndexSearcher::okayForRequest(
 		, int const number
 		, char compareOperator)
 {
-	qDebug() << "request: " << fileName << " " << firstWord << " " << secondWord << " " << number << " " << compareOperator;
-	if (compareOperator == '\0') {
-		return (wordNumber(fileName, firstWord) == wordNumber(fileName, secondWord) - number)
-				||
-				(wordNumber(fileName, secondWord) == wordNumber(fileName, firstWord) - number);
-	} else {
-		if (compareOperator == '-') {
-			return (wordNumber(fileName, firstWord) - wordNumber(fileName, secondWord) <= number);
-		} else {
-			qDebug() << "ololo" << wordNumber(fileName, firstWord) - wordNumber(fileName, secondWord);
-			return (wordNumber(fileName, firstWord) - wordNumber(fileName, secondWord) >= number);
-		}
-	}
+	QList<int> firstWordEntries = wordNumbers(fileName, firstWord);
+	QList<int> secondWordEntries = wordNumbers(fileName, secondWord);
+
+	return anyFound(firstWordEntries, secondWordEntries, compareOperator, number);
 }
 
 char CoordinateIndexSearcher::operatorOfComparing(QString const &request) const
@@ -77,8 +68,54 @@ int CoordinateIndexSearcher::distanceBetweenWords(QString request) const
 	return request.remove("/").remove("-").remove("+").toInt();
 }
 
-int CoordinateIndexSearcher::wordNumber(QString const &fileName, QString const &word)
+bool CoordinateIndexSearcher::equalFound(const int firstWordIndex, const int secondWordIndex, int const number)
 {
-	qDebug() << mHashTable.value(fileName).value(word).toInt();
-	return mHashTable.value(fileName).value(word).toInt();
+	return abs(firstWordIndex - secondWordIndex) == number;
+}
+
+bool CoordinateIndexSearcher::furtherFound(const int firstWordIndex, const int secondWordIndex, const int number)
+{
+	return firstWordIndex - secondWordIndex >= number;
+}
+
+bool CoordinateIndexSearcher::closerFound(const int firstWordIndex, const int secondWordIndex, const int number)
+{
+	return firstWordIndex - secondWordIndex <= number;
+}
+
+bool CoordinateIndexSearcher::anyFound(QList<int> firstWordIndexes, QList<int> secondWordIndexes, char comparingOperator, const int number)
+{
+	bool anyFound = false;
+
+	for (int const firstWordIndex : firstWordIndexes) {
+		for (int const secondWordIndex : secondWordIndexes) {
+			qDebug() << firstWordIndex << " " << secondWordIndex << comparingOperator;
+			bool currentWordsFound = false;
+			if (comparingOperator == '+') {
+				currentWordsFound = furtherFound(firstWordIndex, secondWordIndex, number);
+			} else {
+				if (comparingOperator == '-') {
+					currentWordsFound = closerFound(firstWordIndex, secondWordIndex, number);
+				} else {
+					currentWordsFound = equalFound(firstWordIndex, secondWordIndex, number);
+				}
+			}
+
+			anyFound = anyFound || currentWordsFound;
+		}
+	}
+
+	return anyFound;
+}
+
+QList<int> CoordinateIndexSearcher::wordNumbers(QString const &fileName, QString const &word)
+{
+	QStringList numbersInStr = mHashTable.value(fileName).values(word);
+
+	QList<int> numbers;
+	for (QString const &number : numbersInStr) {
+		numbers.append(number.toInt());
+	}
+
+	return numbers;
 }

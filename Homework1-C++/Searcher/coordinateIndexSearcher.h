@@ -27,7 +27,13 @@ private:
 	char operatorOfComparing(QString const &request) const;
 	int distanceBetweenWords(QString request) const;
 
-	int wordNumber(QString const &fileName, QString const &word);
+	bool equalFound(int const firstWordIndex, int const secondWordIndex, int const number);
+	bool furtherFound(int const firstWordIndex, int const secondWordIndex, int const number);
+	bool closerFound(int const firstWordIndex, int const secondWordIndex, int const number);
+
+	bool anyFound(QList<int> firstWordIndexes, QList<int> secondWordIndexes, char comparingOperator, int const number);
+
+	QList<int> wordNumbers(QString const &fileName, QString const &word);
 
 	QHash<QString, QMultiHash<QString, QString>> mHashTable;
 };
