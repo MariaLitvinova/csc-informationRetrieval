@@ -107,6 +107,4 @@ int main(int argc, char *argv[])
 		QString const pathToCoordinateIndex = argv[2];
 		searchInCoordinateIndex(pathToIndex, pathToCoordinateIndex);
 	}
-
-	return a.exec();
 }

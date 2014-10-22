@@ -30,6 +30,4 @@ int main(int argc, char *argv[])
 		CoordinateIndexer coordIndexer(applicationPath);
 		coordIndexer.buildCoordinateIndex();
 	}
-
-	return a.exec();
 }
